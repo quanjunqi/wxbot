@@ -1,0 +1,5 @@
+#机器人微信ID
+BootWxID:
+BootName: 小帅
+#HOOK连接地址
+HookApiUrl: http://106.55.251.45:10010
