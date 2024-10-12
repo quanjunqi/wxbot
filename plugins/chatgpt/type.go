@@ -1,5 +1,10 @@
 package chatgpt
 
+type ReplyMessage struct {
+	Replytext    string   `json:"replytext"`
+	Replyurl     []string `json:"replyurl"`
+	ReplyContent string   `json:"content"`
+}
 type RequestData struct {
 	AppCode  string    `json:"app_code"`
 	Messages []Message `json:"messages"`
@@ -26,6 +31,8 @@ type Choices struct {
 	Message       Message       `json:"message"`
 	Logprobs      interface{}   `json:"logprobs"`
 	FinishDetails FinishDetails `json:"finish_details"`
+	ImgUrls       []string      `json:"img_urls"`
+	TextContent   string        `json:"text_content"`
 }
 type PromptTokensDetails struct {
 	CachedTokens int `json:"cached_tokens"`

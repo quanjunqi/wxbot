@@ -1,8 +1,8 @@
 package plugins
 
 import (
-	//测试插件
-	// _ "wxbot/plugins/test"
+	// 定时任务插件
+	_ "wxbot/plugins/cronjob"
 	//chatgpt
 	_ "wxbot/plugins/chatgpt"
 )

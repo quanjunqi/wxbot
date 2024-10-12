@@ -5,6 +5,7 @@ import (
 	"fmt"
 )
 
+
 // 发送文字消息
 func (f *Framework) SendText(receiver, msg string) error {
 	apiUrl := fmt.Sprintf("%s/text", f.ApiUrl)

@@ -43,7 +43,7 @@ func (ctx *Ctx) SendImage(receiver, path string) error {
 	if path == "" {
 		return nil
 	}
-	return ctx.framework.SendText(receiver, path)
+	return ctx.framework.SendImage(receiver, path)
 }
 
 // GetChatRoomNumber获取群人数
@@ -67,13 +67,13 @@ func (ctx *Ctx) GetChatRoomNick(userNameId string) string {
 }
 
 // ReplyImage  回复图片消息
-func (ctx *Ctx) ReplyImage(receiver, path string) error {
+func (ctx *Ctx) ReplyImage(path string) error {
 	ctx.mutex.Lock()
 	defer ctx.mutex.Unlock()
 	if path == "" {
 		return nil
 	}
-	return ctx.SendImage(ctx.Event.FromUniqueID, path)
+	return ctx.framework.SendImage(ctx.Event.FromUniqueID, path)
 }
 
 // ReplyText 回复文本消息

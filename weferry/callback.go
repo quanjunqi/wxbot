@@ -76,6 +76,7 @@ func buildEvent(resp string) *bot.Event {
 					Type:    gjson.Get(resp, "type").Int(),
 					Content: gjson.Get(resp, "content").String(),
 				},
+				IsAtMe: true,
 			}
 		}
 	}

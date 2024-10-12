@@ -5,7 +5,6 @@ import (
 	"time"
 	"wxbot/engine/bot"
 	"wxbot/engine/pkg/net"
-
 	_ "wxbot/engine/plugins" //插件
 
 	"wxbot/weferry"
@@ -27,7 +26,6 @@ func main() {
 
 	f := bot.IFramework(nil)
 	f = bot.IFramework(weferry.New(c.BootWxID, c.HookApiUrl))
-
 	// 根据配置文件里的url 检查hook 框架是否能ping通
 	if ipPort, err := net.CheckoutIpPort(c.HookApiUrl); err == nil {
 		if ping := net.PingConn(ipPort, time.Second*10); !ping {
