@@ -15,7 +15,7 @@ import (
 // 初始化解析配置文件，并实例对象
 func main() {
 	v := viper.New()
-	v.SetConfigFile("../config.yaml")
+	v.SetConfigFile("/root/wxbot/config.yaml")
 	if err := v.ReadInConfig(); err != nil {
 		log.Fatalf("[main] 读取配置文件失败: %s", err.Error())
 	}

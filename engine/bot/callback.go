@@ -1,5 +1,9 @@
 package bot
 
+import (
+	"strings"
+)
+
 const (
 	EventGroupChat           = "EventGroupChat"           // 群聊消息事件
 	EventPrivateChat         = "EventPrivateChat"         // 私聊消息事件
@@ -35,6 +39,16 @@ func (ctx *Ctx) IsText() bool {
 	return ctx.Event.Message != nil && ctx.Event.Message.Type == MsgTypeText
 }
 
+// 判断消息是否为拍一拍
+func (ctx *Ctx) Ispat() bool {
+	return ctx.Event.Message != nil && ctx.Event.Message.Type == MsgTypeSystem && strings.Contains(ctx.Event.Message.Content, "拍了拍")
+}
+
+// IsImage 判断消息类型是否为图片
+func (ctx *Ctx) IsImage() bool {
+	return ctx.Event.Message != nil && ctx.Event.Message.Type == MsgTypeImage
+}
+
 // IsAt 判断是否被@了，仅在群聊中有效，私聊也算被@了
 func (ctx *Ctx) IsAt() bool {
 	return ctx.Event.IsAtMe
@@ -43,4 +57,14 @@ func (ctx *Ctx) IsAt() bool {
 // IsEventPrivateChat 判断消息是否是私聊消息
 func (ctx *Ctx) IsEventPrivateChat() bool {
 	return ctx.Event.Type == EventPrivateChat
+}
+
+// IsEventGroupChat 判断消息是否是群聊消息
+func (ctx *Ctx) IsEventGroupChat() bool {
+	return ctx.Event.Type == EventGroupChat
+}
+
+// IsReference 判断消息类型是否是消息引用
+func (ctx *Ctx) IsReference() bool {
+	return ctx.Event.Message != nil && ctx.Event.ReferenceMessage != nil
 }

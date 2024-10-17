@@ -12,6 +12,7 @@ type IFramework interface { //定义机器人的接口
 	SendText(receiver, msg string) error
 	SendTextAt(receiver, msg, aters string) error
 	SendImage(receiver, path string) error
+	SendPat(roomid, wxid string) error
 	GetChatRoomNumber(roomid string) int
 	GetChatRoomNick(userNameId string) string
 }
@@ -44,6 +45,16 @@ func (ctx *Ctx) SendImage(receiver, path string) error {
 		return nil
 	}
 	return ctx.framework.SendImage(receiver, path)
+}
+
+// SendPat 发送拍一拍消息到指定好友
+func (ctx *Ctx) SendPat(roomid, wxid string) error {
+	ctx.mutex.Lock()
+	defer ctx.mutex.Unlock()
+	if roomid == "" || wxid == "" {
+		return nil
+	}
+	return ctx.framework.SendPat(roomid, wxid)
 }
 
 // GetChatRoomNumber获取群人数
@@ -82,6 +93,14 @@ func (ctx *Ctx) ReplyText(text string) error {
 		return nil
 	}
 	return ctx.SendText(ctx.Event.FromUniqueID, text)
+}
+
+// ReplyPat 回复拍一拍消息
+func (ctx *Ctx) ReplyPat(wxid string) error {
+	if wxid == "" {
+		return nil
+	}
+	return ctx.SendPat(ctx.Event.FromUniqueID, wxid)
 }
 
 // ReplyText 回复文本消息并At指定好友

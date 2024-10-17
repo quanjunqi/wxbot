@@ -82,3 +82,25 @@ func (f *Framework) GetChatRoomNick(userNameId string) string {
 
 	return respdata.Data[0].NickName
 }
+
+// 下载图片
+func SaveImage(id int64, dir, extra string) {
+	apiUrl := "http://106.55.251.45:10010/save-image"
+	request := RequestType{
+		Dir:      dir,
+		Extra:    extra,
+		ID:       id,
+		Timetout: 10,
+	}
+	requestdata, err := json.Marshal(request)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	resp, err := sendHTTPRequest("POST", apiUrl, requestdata)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer resp.Body.Close()
+
+}

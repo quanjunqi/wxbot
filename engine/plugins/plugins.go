@@ -5,4 +5,6 @@ import (
 	_ "wxbot/plugins/cronjob"
 	//chatgpt
 	_ "wxbot/plugins/chatgpt"
+	//chatroom
+	_ "wxbot/plugins/chatroom"
 )

@@ -22,6 +22,7 @@ type Message struct {
 	Content string      `json:"content"`
 	Refusal interface{} `json:"refusal"`
 }
+
 type FinishDetails struct {
 	Type string `json:"type"`
 	Stop string `json:"stop"`

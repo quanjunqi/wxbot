@@ -32,7 +32,7 @@ func init() {
 	engine := control.Register("chatgpt", &control.Options{
 		Alias:    "chatgpt",
 		Help:     "智能对话",
-		Priority: 0,
+		Priority: 30,
 	})
 	if err := sqlite.Open("/root/wxbot/plugins/chatgpt/chatgpt.db", &db); err != nil {
 		log.Fatalf("open sqlite db failed: %v", err)
@@ -49,6 +49,13 @@ func init() {
 				content:  []Message{},
 			}
 		)
+
+		if ctx.IsReference() {
+			switch ctx.Event.ReferenceMessage.ReferenceMessageType {
+			case 1: //引用文字时
+				msg = msg + " " + ctx.Event.ReferenceMessage.Content
+			}
+		}
 		// 正式处理
 		if c, ok := chatRoomCtx.Load(chatRoom.chatId); ok {
 			// 判断距离上次聊天是否超过10分钟了
@@ -61,30 +68,23 @@ func init() {
 		} else {
 			chatRoom.content = []Message{{Role: "user", Content: msg}}
 		}
+
 		replyMessage := Chatgpt_text(chatRoom.content)
 		chatRoom.content = append(chatRoom.content, Message{Role: "assistant", Content: replyMessage.ReplyContent})
 		chatRoomCtx.Store(chatRoom.chatId, chatRoom)
 		if replyMessage.Replytext != "" {
 			// 根据换行符分割文本
 			lines := strings.Split(replyMessage.Replytext, "\n")
-
-			// // 删除最后一行商品链接
-			// if len(lines) > 0 {
-			// 	lines = lines[:len(lines)-1]
-			// }
-			// 分段发送结果
 			for i, line := range lines {
 				// 模拟随机延迟
 				time.Sleep(time.Duration(rand.Intn(2)+1) * time.Second)
 
-				// 第一行使用 ReplyTextAt，后续行使用 ReplyText
 				if i == 0 {
 					ctx.ReplyTextAt(line)
 				} else {
 					ctx.ReplyText(line)
 				}
 			}
-
 		} else {
 			ctx.ReplyTextAt(replyMessage.ReplyContent)
 		}

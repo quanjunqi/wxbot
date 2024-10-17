@@ -7,6 +7,12 @@ type RequestType struct {
 	Path     string `json:"path"`
 	Db       string `json:"db"`
 	Sql      string `json:"sql"`
+	Extra    string `json:"extra"`
+	Dir      string `json:"dir"`
+	ID       int64  `json:"id"`
+	Timetout int64  `json:"timeout"`
+	Roomid   string `json:"roomid"`
+	Wxid     string `json:"wxid"`
 }
 
 type ResponseType struct {

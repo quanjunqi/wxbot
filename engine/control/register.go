@@ -18,6 +18,6 @@ func Register(service string, o *Options) *Engine {
 		log.Fatalf("插件[%s]优先级 %d 已被 %s 占用", service, priority, s)
 	}
 	priorityMap[priority] = service
-	log.Printf("插件[%s]已注册, 优先级: %d", service, priority)
+	log.Printf("插件[%s]已注册, 优先级: %d", service, o.Priority)
 	return newEngine(service, o)
 }

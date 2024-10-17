@@ -5,7 +5,6 @@ import (
 	"fmt"
 )
 
-
 // 发送文字消息
 func (f *Framework) SendText(receiver, msg string) error {
 	apiUrl := fmt.Sprintf("%s/text", f.ApiUrl)
@@ -54,6 +53,26 @@ func (f *Framework) SendImage(receiver, path string) error {
 	request := RequestType{
 		Receiver: receiver,
 		Path:     path,
+	}
+	requestdata, err := json.Marshal(request)
+	if err != nil {
+		return err
+	}
+	resp, err := sendHTTPRequest("POST", apiUrl, requestdata)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	return nil
+}
+
+// 发送拍一拍消息
+func (f *Framework) SendPat(roomid, wxid string) error {
+	apiUrl := fmt.Sprintf("%s/pat", f.ApiUrl)
+	request := RequestType{
+		Roomid: roomid,
+		Wxid:   wxid,
 	}
 	requestdata, err := json.Marshal(request)
 	if err != nil {

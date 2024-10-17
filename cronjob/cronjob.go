@@ -1,6 +1,9 @@
 package cronjob
 
 import (
+	"fmt"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -14,9 +17,9 @@ type CronjobBuffer struct { //事件总线
 }
 
 type CronjoBufferItem struct { //事件通道
-	ID            string    // 任务的唯一标识符
-	Function      func()    // 要执行的函数
-	ExecutionTime time.Time // 任务的下次执行时间
+	ID             string // 任务的唯一标识符
+	Function       func() // 要执行的函数
+	CronExpression string // Cron 表达式
 }
 
 func NewCronjobBuffer(bufferSize int) *CronjobBuffer {
@@ -49,6 +52,7 @@ func (cron *CronjobBuffer) Loop(latency time.Duration) {
 	}()
 }
 
+// 执行定时任务的方法
 func (cron *CronjobBuffer) runTask(task CronjoBufferItem) {
 	ticker := time.NewTicker(1 * time.Minute) // 每分钟检查一次
 	defer ticker.Stop()
@@ -56,19 +60,89 @@ func (cron *CronjobBuffer) runTask(task CronjoBufferItem) {
 		select {
 		case <-ticker.C:
 			currentTime := time.Now()
-			if currentTime.Year() == task.ExecutionTime.Year() &&
-				currentTime.YearDay() == task.ExecutionTime.YearDay() &&
-				currentTime.Hour() == task.ExecutionTime.Hour() &&
-				currentTime.Minute() == task.ExecutionTime.Minute() {
-				// 更新下一次执行时间为明天
+			if cron.shouldRun(currentTime, task.CronExpression) {
 				task.Function() // 执行任务
-				task.ExecutionTime = task.ExecutionTime.Add(24 * time.Hour)
 			}
-
 		case <-cron.done:
 			return
 		}
 	}
+}
+
+// shouldRun 根据 Cron 表达式判断任务是否需要执行
+func (cron *CronjobBuffer) shouldRun(t time.Time, cronExp string) bool {
+	parts := strings.Split(cronExp, " ")
+	if len(parts) != 5 {
+		return false // 不正确的 Cron 表达式
+	}
+
+	minute := parts[0]
+	hour := parts[1]
+	day := parts[2]
+	month := parts[3]
+	week := parts[4]
+
+	// 检查分钟
+	if !matchCronField(t.Minute(), minute) {
+		return false
+	}
+
+	// 检查小时
+	if !matchCronField(t.Hour(), hour) {
+		return false
+	}
+
+	// 检查日
+	if !matchCronField(t.Day(), day) {
+		return false
+	}
+
+	// 检查月
+	if !matchCronField(int(t.Month()), month) {
+		return false
+	}
+
+	// 检查周
+	if !matchCronField(int(t.Weekday()), week) {
+		return false
+	}
+
+	return true
+}
+
+// matchCronField 判断时间字段是否匹配 Cron 表达式
+func matchCronField(value int, field string) bool {
+	if field == "*" {
+		return true
+	}
+
+	if strings.Contains(field, "/") {
+		parts := strings.Split(field, "/")
+		if len(parts) == 2 {
+			base := 0
+			if parts[0] != "" {
+				base, _ = strconv.Atoi(parts[0])
+			}
+			step, _ := strconv.Atoi(parts[1])
+			return value >= base && (value-base)%step == 0
+		}
+	}
+	// 处理范围
+	if strings.Contains(field, "-") {
+		parts := strings.Split(field, "-")
+		if len(parts) == 2 {
+			start, _ := strconv.Atoi(parts[0])
+			end, _ := strconv.Atoi(parts[1])
+			return value >= start && value <= end
+		}
+	}
+	parts := strings.Split(field, ",")
+	for _, part := range parts {
+		if part == fmt.Sprintf("%d", value) {
+			return true
+		}
+	}
+	return false
 }
 
 func (cron *CronjobBuffer) AddTask(task CronjoBufferItem) {

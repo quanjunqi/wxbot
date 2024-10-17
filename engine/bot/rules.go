@@ -18,6 +18,11 @@ func RegexRule(regexPattern string) Rule {
 	}
 }
 
+// OnlyGroup 只允许群聊使用
+func OnlyGroup(ctx *Ctx) bool {
+	return ctx.IsEventGroupChat()
+}
+
 // OnlyAtMe 只允许@机器人使用，注意这里私聊也是返回true，如仅需群聊，请再加一个OnlyGroup规则
 func OnlyAtMe(ctx *Ctx) bool {
 	return ctx.IsAt()

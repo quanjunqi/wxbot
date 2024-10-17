@@ -147,12 +147,27 @@ loop:
 func preProcessMessageEvent(ctx *Ctx, e *Event) {
 	switch e.Type {
 	case EventPrivateChat:
+		if ctx.IsReference() {
+			log.Println(fmt.Sprintf("[回调]收到私聊引用消息(%s[%s])文本消息 ==> %v", e.FromWxId, e.FromName, e.Message.Content))
+		}
 		if ctx.IsText() {
 			log.Println(fmt.Sprintf("[回调]收到私聊(%s[%s])文本消息 ==> %v", e.FromWxId, e.FromName, e.Message.Content))
 		}
+		if ctx.IsImage() {
+			log.Println(fmt.Sprintf("[回调]收到私聊(%s[%s])图片消息 ==> %v", e.FromWxId, e.FromName, e.Message.Id))
+		}
 	case EventGroupChat:
+		if ctx.IsReference() {
+			log.Println(fmt.Sprintf("[回调]收到群聊引用消息(%s[%s])>用户(%s[%s])文本消息 ==> %v", e.FromGroupName, e.FromGroup, e.FromWxId, e.FromName, e.Message.Content))
+		}
 		if ctx.IsText() {
 			log.Println(fmt.Sprintf("[回调]收到群聊(%s[%s])>用户(%s[%s])文本消息 ==> %v", e.FromGroupName, e.FromGroup, e.FromWxId, e.FromName, e.Message.Content))
+		}
+		if ctx.IsImage() {
+			log.Println(fmt.Sprintf("[回调]收到私聊(%s[%s])图片消息 ==> %v", e.FromWxId, e.FromName, e.Message.Id))
+		}
+		if ctx.Ispat() {
+			log.Println(fmt.Sprintf("[回调]收到群聊(%s[%s])怕一拍消息 ==> %v", e.FromGroupName, e.FromGroup, e.Message.Content))
 		}
 	}
 }

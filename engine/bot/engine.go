@@ -12,6 +12,8 @@ func New() *Engine {
 
 var defaultEngine = New()
 
+
+
 // SetBlock 设置是否阻断后续处理器
 func (e *Engine) SetBlock(block bool) *Engine {
 	e.block = block

@@ -2,7 +2,6 @@ package control
 
 import (
 	"wxbot/engine/bot"
-
 )
 
 type Engine struct {
@@ -14,10 +13,10 @@ type Engine struct {
 func newEngine(service string, o *Options) (e *Engine) {
 	e = &Engine{
 		en:       bot.New(),
-		priority: priority,
+		priority: o.Priority, // 直接使用全局 priority
 		service:  service,
 	}
-	o.Priority = priority
+	// o.Priority = priority // 这里可以选择是否需要更新 Options 的 Priority
 	return
 }
 
