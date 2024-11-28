@@ -6,13 +6,16 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"regexp"
+	"strconv"
 	"strings"
+	"wxbot/engine/pkg/redisutil"
 )
 
 // 执行sql语句
 func PlanSQL(sql string) (*http.Response, error) {
 
-	apiUrl := "http://106.55.251.45:10010/sql"
+	apiUrl := "http://124.220.212.132:10010/sql"
 	request := RequestType{
 		Db:  "MicroMsg.db",
 		Sql: sql,
@@ -85,7 +88,7 @@ func (f *Framework) GetChatRoomNick(userNameId string) string {
 
 // 下载图片
 func SaveImage(id int64, dir, extra string) {
-	apiUrl := "http://106.55.251.45:10010/save-image"
+	apiUrl := "http://124.220.212.132:10010/save-image"
 	request := RequestType{
 		Dir:      dir,
 		Extra:    extra,
@@ -103,4 +106,25 @@ func SaveImage(id int64, dir, extra string) {
 	}
 	defer resp.Body.Close()
 
+	// 图片下载成功，将 ID 和图片地址存入 Redis
+
+	// 正则表达式，匹配文件名（去掉扩展名）
+	re := regexp.MustCompile(`([^/\\]+)\.dat$`)
+	// 获取图片文件的名字
+	match := re.FindStringSubmatch(extra)
+	if len(match) > 1 {
+		// match[1] 是捕获组，包含文件名
+		imageURL := fmt.Sprintf("https://wechat-qjq.oss-cn-shenzhen.aliyuncs.com/%s.jpg", match[1])
+		// 使用 Redis 工具包
+		redisClient := redisutil.GetInstance("localhost:6379", "", 0)
+		// 正确地将 int64 转换为字符串
+		idStr := strconv.FormatInt(id, 10)
+		err = redisClient.Set(idStr, imageURL)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Printf("Image ID %d saved with URL %s in Redis", id, imageURL)
+	} else {
+		fmt.Println("No match found.")
+	}
 }

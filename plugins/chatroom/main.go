@@ -14,7 +14,7 @@ func init() {
 		Help:     "群聊插件",
 		Priority: 20,
 	})
-	engine.OnMessage(bot.OnlyGroup).SetBlock(true).Handle(func(ctx *bot.Ctx) {
+	engine.OnMessage(bot.OnlyGroup).SetBlock(false).Handle(func(ctx *bot.Ctx) {
 		//存储用户拍一拍状态
 		PatMap := make(map[string]int)
 

@@ -29,3 +29,13 @@ func (e *Engine) OnMessage(rules ...bot.Rule) *Matcher {
 func (e *Engine) OnRegex(regexPattern string, rules ...bot.Rule) *Matcher {
 	return (*Matcher)(e.en.OnRegex(regexPattern, rules...).SetPriority(e.priority))
 }
+
+// OnFullMatch 完全匹配触发器
+func (e *Engine) OnFullMatch(src string, rules ...bot.Rule) *Matcher {
+	return (*Matcher)(e.en.OnFullMatch(src, rules...).SetPriority(e.priority))
+}
+
+// OnFullMatchGroup 完全匹配触发器组
+func (e *Engine) OnFullMatchGroup(src []string, rules ...bot.Rule) *Matcher {
+	return (*Matcher)(e.en.OnFullMatchGroup(src, rules...).SetPriority(e.priority))
+}

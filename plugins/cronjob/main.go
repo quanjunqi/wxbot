@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	ApiUrl     = "http://106.55.251.45:10010"
+	ApiUrl     = "http://124.220.212.132:10010"
 	BootWxID   = ""
 	once       sync.Once
 	framework  bot.IFramework
@@ -38,16 +38,29 @@ func init() {
 				// framework.SendText("52386108522@chatroom", "下午好")
 				framework.SendImage("52386108522@chatroom", Moyu())
 			},
-			CronExpression: "0 18 * * *", // 每天18:00执行,
+			CronExpression: "0 9 * * *", // 每天9:00执行,
 			ID:             "摸鱼图片",
 		})
-
 		cronBuffer.AddTask(cronjob.CronjoBufferItem{
 			Function: func() {
-				framework.SendText("52386108522@chatroom", Tiangou())
+				framework.SendText("52386108522@chatroom", LaoHuangLi())
 			},
-			CronExpression: "30 9-24 * * *", // 9点-24点,1小时执行一次
-			ID:             "舔狗日记",
+			CronExpression: "0 10 * * *", // 每天10:00执行,
+			ID:             "万年历",
+		})		
+		cronBuffer.AddTask(cronjob.CronjoBufferItem{
+			Function: func() {
+				framework.SendText("52386108522@chatroom", KFC())
+			},
+			CronExpression: "0 14 * * 4", // 每周四14:00执行,
+			ID:             "kfc",
 		})
+		// cronBuffer.AddTask(cronjob.CronjoBufferItem{
+		// 	Function: func() {
+		// 		framework.SendText("52386108522@chatroom", Tiangou())
+		// 	},
+		// 	CronExpression: "30 9-24 * * *", // 9点-24点,1小时执行一次
+		// 	ID:             "舔狗日记",
+		// })
 	})
 }

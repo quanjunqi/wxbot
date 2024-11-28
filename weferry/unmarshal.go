@@ -102,3 +102,32 @@ type ReferenceXml struct {
 	} `xml:"appinfo"`
 	Commenturl string `xml:"commenturl"`
 }
+
+// WcpayMsgxml 转账消息xml
+type WcpayMsgxml struct {
+	XMLName xml.Name `xml:"msg"`
+	AppMsg  struct {
+		XMLName   xml.Name `xml:"appmsg"`
+		Title     string   `xml:"title"`
+		Des       string   `xml:"des"`
+		Action    string   `xml:"action"`
+		Type      string   `xml:"type"`
+		Content   string   `xml:"content"`
+		URL       string   `xml:"url"`
+		ThumbURL  string   `xml:"thumburl"`
+		LowURL    string   `xml:"lowurl"`
+		ExtInfo   string   `xml:"extinfo"`
+		WCPayInfo struct {
+			PaySubtype        string `xml:"paysubtype"`
+			Feedesc           string `xml:"feedesc"`
+			TransactionID     string `xml:"transcationid"`
+			TransferID        string `xml:"transferid"`
+			InvalidTime       string `xml:"invalidtime"`
+			BeginTransferTime string `xml:"begintransfertime"`
+			EffectiveDate     string `xml:"effectivedate"`
+			PayMemo           string `xml:"pay_memo"`
+			ReceiverUsername  string `xml:"receiver_username"`
+			PayerUsername     string `xml:"payer_username"`
+		} `xml:"wcpayinfo"`
+	} `xml:"appmsg"`
+}

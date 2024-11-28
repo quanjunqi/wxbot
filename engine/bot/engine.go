@@ -12,8 +12,6 @@ func New() *Engine {
 
 var defaultEngine = New()
 
-
-
 // SetBlock 设置是否阻断后续处理器
 func (e *Engine) SetBlock(block bool) *Engine {
 	e.block = block
@@ -51,6 +49,36 @@ func (e *Engine) OnRegex(regexPattern string, rules ...Rule) *Matcher { //局部
 	matcher := &Matcher{
 		Engine: e,
 		Rules:  append([]Rule{RegexRule(regexPattern)}, rules...),
+	}
+	e.matchers = append(e.matchers, matcher)
+	return StoreMatcher(matcher)
+}
+
+// OnFullMatch 完全匹配触发器
+func OnFullMatch(src string, rules ...Rule) *Matcher {
+	return defaultEngine.OnFullMatch(src, rules...)
+}
+
+// OnFullMatch 完全匹配触发器
+func (e *Engine) OnFullMatch(src string, rules ...Rule) *Matcher {
+	matcher := &Matcher{
+		Engine: e,
+		Rules:  append([]Rule{FullMatchRule(src)}, rules...),
+	}
+	e.matchers = append(e.matchers, matcher)
+	return StoreMatcher(matcher)
+}
+
+// OnFullMatchGroup 完全匹配触发器组
+func OnFullMatchGroup(src []string, rules ...Rule) *Matcher {
+	return defaultEngine.OnFullMatchGroup(src, rules...)
+}
+
+// OnFullMatchGroup 完全匹配触发器组
+func (e *Engine) OnFullMatchGroup(src []string, rules ...Rule) *Matcher {
+	matcher := &Matcher{
+		Engine: e,
+		Rules:  append([]Rule{FullMatchRule(src...)}, rules...),
 	}
 	e.matchers = append(e.matchers, matcher)
 	return StoreMatcher(matcher)

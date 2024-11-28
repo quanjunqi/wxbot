@@ -61,7 +61,7 @@ type Agent struct {
 	NeedShowThought bool    `json:"need_show_thought"`
 }
 
-func main() {
+func main1() {
 	client := &http.Client{}
 	// 创建消息
 	messages := []Message{

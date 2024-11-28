@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"wxbot/engine/bot"
+	"wxbot/engine/pkg/redisutil"
 
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
@@ -128,6 +129,13 @@ func buildEvent(resp string) *bot.Event {
 				}
 				if refer.Appmsg.Refermsg.Type == 3 {
 					event.ReferenceMessage.ReferenceMessageType = bot.MsgTypeImage
+					redisClient := redisutil.GetInstance("localhost:6379", "", 0)
+					// 根据 id 查询图片 URL
+					// 查询值
+					event.ReferenceMessage.ImageURL, err = redisClient.Get(refer.Appmsg.Refermsg.Svrid)
+					if err != nil {
+						log.Printf("找不到键的值 %s", refer.Appmsg.Refermsg.Svrid)
+					}
 				}
 			}
 
@@ -146,7 +154,7 @@ func buildEvent(resp string) *bot.Event {
 					Type:    bot.MsgTypeText,
 					Content: gjson.Get(resp, "content").String(),
 				},
-				// IsAtMe: true,
+				IsAtMe: true,
 			}
 		case eventImageMessage: //图片消息
 			event = bot.Event{
@@ -193,6 +201,13 @@ func buildEvent(resp string) *bot.Event {
 				}
 				if refer.Appmsg.Refermsg.Type == 3 {
 					event.ReferenceMessage.ReferenceMessageType = bot.MsgTypeImage
+					redisClient := redisutil.GetInstance("localhost:6379", "", 0)
+					// 根据 id 查询图片 URL
+					// 查询值
+					event.ReferenceMessage.ImageURL, err = redisClient.Get(refer.Appmsg.Refermsg.Svrid)
+					if err != nil {
+						log.Printf("找不到键的值 %s", refer.Appmsg.Refermsg.Svrid)
+					}
 				}
 			}
 		}

@@ -7,7 +7,7 @@ import (
 	"github.com/yanyiwu/gojieba"
 )
 
-func main() {
+func main2() {
 	var s string
 	var words []string
 	use_hmm := true

@@ -18,7 +18,7 @@ type Event struct {
 
 // Message 记录消息的具体内容
 type Message struct {
-	Id      int64 // 消息id
+	Id      int64  // 消息id
 	Type    int64  // 消息类型
 	Content string // 消息内容
 }
@@ -30,4 +30,17 @@ type ReferenceMessage struct {
 	FromUser             string // 消息来源群ID
 	ChatUser             string // 消息来源微信ID
 	Content              string // 消息内容
+	ImageURL             string // 引用图片地址
+
+}
+
+// TransferMessage 记录转账消息的具体内容
+type TransferMessage struct {
+	FromWxId     string // 发送者微信ID
+	MsgSource    int64  // 消息来源 1:收到转账 2:对方接收转账 3:发出转账 4:自己接收转账 5:对方退还 6:自己退还
+	TransferType int64  // 转账类型 1:即时到账 2:延时到账
+	Money        string // 转账金额，单位元
+	Memo         string // 转账备注
+	TransferId   string // 转账ID
+	TransferTime string // 转账时间，10位时间戳
 }

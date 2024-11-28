@@ -16,10 +16,14 @@ type RequestType struct {
 }
 
 type ResponseType struct {
-	Status int    `json:"status"`
-	Error  any    `json:"error"`
+	Status int  `json:"status"`
+	Error  any  `json:"error"`
 	Data   []Data `json:"data"`
 }
+
+// type Data struct {
+// 	Bs64 []Bs64 `json:"bs64"`
+// }
 type Data struct {
 	UserName        string `json:"UserName"`
 	NickName        string `json:"NickName"`
